@@ -1,36 +1,63 @@
-
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단한 메모장</title>
+    <title>GitHub API를 사용하여 데이터 저장하기</title>
 </head>
 <body>
-    <h1>간단한 메모장</h1>
-    <textarea id="memo" placeholder="메모를 입력하세요..." rows="10" cols="30"></textarea>
-    <br>
-    <button onclick="saveMemo()">저장</button>
-    <button onclick="loadMemo()">불러오기</button>
 
-    <script>
-        // 메모를 저장하는 함수
-        function saveMemo() {
-            var memoContent = document.getElementById('memo').value;
-            localStorage.setItem('memo', memoContent);
-            alert('메모가 저장되었습니다.');
-        }
+<textarea id="dataTextarea" rows="5" cols="50"></textarea><br>
+<button onclick="saveData()">저장하기</button>
+<button onclick="loadData()">불러오기</button>
 
-        // 메모를 불러오는 함수
-        function loadMemo() {
-            var memoContent = localStorage.getItem('memo');
-            if (memoContent) {
-                document.getElementById('memo').value = memoContent;
-                alert('메모를 불러왔습니다.');
+<script>
+    // GitHub 저장소 정보
+    const username = 'Col-in-71';
+    const repoName = 'simple-memo-app';
+    const filePath = 'data.txt'; // 데이터를 저장할 파일 경로
+
+    // GitHub API를 통해 데이터 저장하기
+    function saveData() {
+        const data = document.getElementById('dataTextarea').value;
+        const url = `https://api.github.com/repos/${username}/${repoName}/contents/${filePath}`;
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token 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`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: '데이터 업데이트',
+                content: btoa(data)
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('데이터가 성공적으로 저장되었습니다.');
             } else {
-                alert('저장된 메모가 없습니다.');
+                throw new Error('데이터 저장 실패');
             }
-        }
-    </script>
+        })
+        .catch(error => {
+            console.error('오류 발생:', error);
+        });
+    }
+
+    // GitHub API를 통해 데이터 불러오기
+    function loadData() {
+        const url = `https://raw.githubusercontent.com/${username}/${repoName}/main/${filePath}`;
+        fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('dataTextarea').value = atob(data);
+            alert('데이터가 성공적으로 불러와졌습니다.');
+        })
+        .catch(error => {
+            console.error('오류 발생:', error);
+        });
+    }
+</script>
+
 </body>
 </html>
