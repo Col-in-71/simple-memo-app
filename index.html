@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>간단한 메모장</title>
+    <!-- Firebase JavaScript SDK 추가 -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 </head>
@@ -19,19 +20,25 @@
         // Firebase 초기화
         const firebaseConfig = {
             apiKey: "AIzaSyAI79YXw7oK5pu0PSeJwNUH4kB3Wq-bAVM",
-            authDomain: "simple-memo-app-71139.firebaseapp.com",
-            databaseURL: "https://simple-memo-app-71139.firebaseio.com",
-            projectId: "simple-memo-app-71139",
-            storageBucket: "simple-memo-app-71139.appspot.com",
+            authDomain: "
+simple-memo-app-71139.firebaseapp.com",
+            databaseURL: "https://
+simple-memo-app-71139.firebaseio.com",
+            projectId: "
+simple-memo-app-71139",
+            storageBucket: "
+simple-memo-app-71139.appspot.com",
             messagingSenderId: "71357876167",
             appId: "1:71357876167:web:e6ff40c6defbe0b6853be2"
         };
 
+        // Firebase 앱 초기화
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         function saveMemo() {
             const memo = document.getElementById('memo').value;
+            // Firebase 데이터베이스에 메모 저장
             database.ref('memo').set(memo)
                 .then(() => {
                     alert('메모가 저장되었습니다.');
@@ -42,6 +49,7 @@
         }
 
         function loadMemo() {
+            // Firebase 데이터베이스에서 메모 불러오기
             database.ref('memo').get()
                 .then((snapshot) => {
                     if (snapshot.exists()) {
@@ -57,6 +65,7 @@
         }
 
         function clearMemo() {
+            // 메모 초기화
             document.getElementById('memo').value = '';
             database.ref('memo').remove()
                 .then(() => {
